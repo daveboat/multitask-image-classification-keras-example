@@ -3,11 +3,11 @@ A keras model to perform multi-task classification. Images have two classes: ind
 
 This is intended as an example/toy model only, so I didn't bother splitting off a validation set. you can if you want.
 """
-from keras import backend as K
+from tensorflow.python.keras import backend as K
 import tensorflow as tf
-config = tf.ConfigProto()
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.6
-session = tf.Session(config=config)
+session = tf.compat.v1.Session(config=config)
 K.set_session(session)
 from keras.models import Input, Model
 from keras.layers import Conv2D, Dense, Dropout, Flatten, MaxPooling2D
@@ -51,8 +51,8 @@ def multitask_model(split_fc=False):
         output_animal = Dense(1, activation='sigmoid', name='output_animal')(x)
         output_indoor_outdoor = Dense(1, activation='sigmoid', name='output_indoor_outdoor')(x)
 
-    model = Model(input=model_input, outputs=[output_indoor_outdoor, output_animal])
-
+    model = Model(model_input, [output_indoor_outdoor, output_animal])
+    
     return model
 
 def train_gen(training_dict, batch_size=10):
@@ -88,7 +88,7 @@ def train_gen(training_dict, batch_size=10):
         current_batch_size = 0
         targets = [np.array(targets_indoor_outdoor), np.array(targets_animal)]
 
-        yield [np.stack(images, axis=0), targets]
+        yield [np.stack(images, axis=0)], targets
 
 if __name__ == '__main__':
     batch_size = 10
