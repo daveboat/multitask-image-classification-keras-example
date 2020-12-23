@@ -1,11 +1,11 @@
 """
 Run prediction using trained_model.h5 on cat.jpeg
 """
-from keras import backend as K
+from tensorflow.python.keras import backend as K
 import tensorflow as tf
-config = tf.ConfigProto()
+config = tf.compat.v1.ConfigProto()
 config.gpu_options.per_process_gpu_memory_fraction = 0.6
-session = tf.Session(config=config)
+session = tf.compat.v1.Session(config=config)
 K.set_session(session)
 from keras.models import load_model
 from keras.preprocessing import image
